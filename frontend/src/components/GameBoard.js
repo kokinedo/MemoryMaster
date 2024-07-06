@@ -6,7 +6,6 @@ import { GameContext } from '../contexts/GameContext';
 import axios from 'axios';
 import '../styles/GameBoard.css'
 
-
 const GameBoard = () => {
   const [cards, setCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
@@ -17,6 +16,8 @@ const GameBoard = () => {
   const navigate = useNavigate();
   const [gameStarted, setGameStarted] = useState(false);
   const [showWinPopup, setShowWinPopup] = useState(false);
+  const [removingCards, setRemovingCards] = useState([]);
+
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -26,15 +27,26 @@ const GameBoard = () => {
   }, [location, setGameMode]);
 
   const initializeGame = async (mode) => {
-    const cardCount = mode === 'easy' ? 10 : mode === 'medium' ? 15 : 20;
+    const cardCount = mode === 'easy' ? 5 : mode === 'medium' ? 5 : 5; // 5 unique cards for each mode
     try {
       const response = await axios.get(`https://randomuser.me/api/?results=${cardCount}`);
       const users = response.data.results;
       
-      const gameCards = users.flatMap(user => [
-        { id: `${user.login.uuid}-1`, image: user.picture.large, matched: false },
-        { id: `${user.login.uuid}-2`, image: user.picture.large, matched: false }
-      ]);
+      const gameCards = users.flatMap(user => {
+        const cards = [
+          { id: `${user.login.uuid}-1`, image: user.picture.large, matched: false },
+          { id: `${user.login.uuid}-2`, image: user.picture.large, matched: false },
+        ];
+        if (mode === 'medium') {
+          cards.push({ id: `${user.login.uuid}-3`, image: user.picture.large, matched: false });
+        } else if (mode === 'hard') {
+          cards.push(
+            { id: `${user.login.uuid}-3`, image: user.picture.large, matched: false },
+            { id: `${user.login.uuid}-4`, image: user.picture.large, matched: false }
+          );
+        }
+        return cards;
+      });
 
       setCards(shuffleArray(gameCards));
       setGameStarted(true);
@@ -54,22 +66,34 @@ const GameBoard = () => {
   };
 
   const handleCardClick = (card) => {
-    if (flippedCards.length === 2 || card.matched) return;
+    if (flippedCards.length === getRequiredMatches() || card.matched) return;
     
     const newFlippedCards = [...flippedCards, card];
     setFlippedCards(newFlippedCards);
 
-    if (newFlippedCards.length === 2) {
+    if (newFlippedCards.length === getRequiredMatches()) {
       setMoves(moves + 1);
       checkForMatch(newFlippedCards);
     }
   };
 
+  const getRequiredMatches = () => {
+    switch (gameMode) {
+      case 'easy': return 2;
+      case 'medium': return 3;
+      case 'hard': return 4;
+      default: return 2;
+    }
+  };
+
   const checkForMatch = (flippedCards) => {
-    if (flippedCards[0].image === flippedCards[1].image) {
-      setCards(cards.map(card => 
-        flippedCards.some(flipped => flipped.id === card.id) ? {...card, matched: true} : card
-      ));
+    const allMatch = flippedCards.every(card => card.image === flippedCards[0].image);
+    if (allMatch) {
+      setRemovingCards(flippedCards.map(card => card.id));
+      setTimeout(() => {
+        setCards(prevCards => prevCards.filter(card => !flippedCards.some(flipped => flipped.id === card.id)));
+        setRemovingCards([]);
+      }, 500); // This should match the duration of the CSS transition
       setMatchedPairs(matchedPairs + 1);
       setFlippedCards([]);
     } else {
@@ -78,10 +102,10 @@ const GameBoard = () => {
   };
 
   useEffect(() => {
-    if (gameStarted && matchedPairs === cards.length / 2 && cards.length > 0) {
+    if (gameStarted && cards.length === 0) {
       setShowWinPopup(true);
     }
-  }, [matchedPairs, cards.length, gameStarted]);
+  }, [cards.length, gameStarted]);
 
   const handlePlayAgain = () => {
     setShowWinPopup(false);
@@ -102,7 +126,8 @@ const GameBoard = () => {
           <Card 
             key={card.id} 
             card={card} 
-            flipped={flippedCards.some(flipped => flipped.id === card.id) || card.matched}
+            flipped={flippedCards.some(flipped => flipped.id === card.id)}
+            removing={removingCards.includes(card.id)}
             onClick={() => handleCardClick(card)} 
           />
         ))}
@@ -119,4 +144,5 @@ const GameBoard = () => {
     </div>
   );
 };
+
 export default GameBoard;
