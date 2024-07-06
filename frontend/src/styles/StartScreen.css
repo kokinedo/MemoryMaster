@@ -1,0 +1,75 @@
+.start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+  
+  .game-title {
+    font-size: 3em;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .game-modes {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .mode-button {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .mode-button.easy {
+    background-color: #27ae60;
+    color: white;
+  }
+  
+  .mode-button.medium {
+    background-color: #f39c12;
+    color: white;
+  }
+  
+  .mode-button.hard {
+    background-color: #c0392b;
+    color: white;
+  }
+  
+  .mode-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .history-link {
+    margin-top: 30px;
+    color: #3498db;
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+  }
+  
+  .history-link:hover {
+    color: #2980b9;
+  }
+  
+  @media (max-width: 600px) {
+    .game-title {
+      font-size: 2em;
+    }
+    
+    .mode-button {
+      padding: 12px 24px;
+      font-size: 1em;
+    }
+  }
