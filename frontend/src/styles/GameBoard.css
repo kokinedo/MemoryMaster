@@ -44,3 +44,34 @@
     margin: 0 auto;
     padding: 20px;
   }
+
+  .game-board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f0f0f0;
+  }
+  
+  .game-mode {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 800px;
+    gap: 10px;
+  }
+  
+  .game-info {
+    margin-top: 20px;
+    font-size: 1.2em;
+  }
+  
+  .moves-counter {
+    font-weight: bold;
+  }

@@ -10,7 +10,8 @@ pip-delete-this-directory.txt
 .pytest_cache/
 
 # React/Node.js
-/frontend/node_modules
+node_modules/
+/frontend/node_modules/
 /frontend/.pnp
 /frontend/.pnp.js
 /frontend/coverage
@@ -63,3 +64,7 @@ Thumbs.db
 # Temporary files
 *.bak
 *.tmp
+
+# NPM
+/node_modules/
+/.package-lock.json

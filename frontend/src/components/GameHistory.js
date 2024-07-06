@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import '../styles/GameHistory.css'
+
+
 
 const GameHistory = () => {
   const [gameHistory, setGameHistory] = useState([]);
