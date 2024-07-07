@@ -1,16 +1,15 @@
 from app import ma
+from app.models import Game, Move
 
-class MoveSchema(ma.Schema):
+class MoveSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        fields = ('id', 'card_name', 'coordinates', 'found_match', 'move_number')
+        model = Move
 
-class GameSchema(ma.Schema):
+class GameSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Game
+        include_fk = True
     moves = ma.Nested(MoveSchema, many=True)
-    
-    class Meta:
-        fields = ('id', 'mode', 'moves', 'date_played', 'player_id', 'moves')
 
-move_schema = MoveSchema()
-moves_schema = MoveSchema(many=True)
 game_schema = GameSchema()
 games_schema = GameSchema(many=True)

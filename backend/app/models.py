@@ -3,11 +3,11 @@ from datetime import datetime
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    mode = db.Column(db.String(10), nullable=False)
-    moves = db.Column(db.Integer, nullable=False)
+    difficulty = db.Column(db.String(10), nullable=False)
+    total_moves = db.Column(db.Integer, nullable=False)
     date_played = db.Column(db.DateTime, default=datetime.utcnow)
-    player_id = db.Column(db.String(36), nullable=False)  # Use UUID for anonymous players
-    moves = db.relationship('Move', backref='game', lazy='dynamic')
+    player_id = db.Column(db.String(36), nullable=False)
+    moves = db.relationship('Move', backref='game', lazy=True)
 
 class Move(db.Model):
     id = db.Column(db.Integer, primary_key=True)

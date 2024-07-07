@@ -1,28 +1,23 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
-from flask_cors import CORS
 from flask_migrate import Migrate
+from flask_cors import CORS
+from config import Config
 
 db = SQLAlchemy()
-ma = Marshmallow()
 migrate = Migrate()
 
-def create_app(config_class=None):
+def create_app(config_class=Config):
     app = Flask(__name__)
-    
-    # Configure the app
-    if config_class:
-        app.config.from_object(config_class)
-    
-    # Initialize extensions
+    app.config.from_object(config_class)
+
     db.init_app(app)
-    ma.init_app(app)
-    CORS(app)
     migrate.init_app(app, db)
-    
-    # Register blueprints
-    from app import routes
-    app.register_blueprint(routes.bp)
-    
+    CORS(app)
+
+    from app.routes import bp as main_bp
+    app.register_blueprint(main_bp)
+
+    from app import models
+
     return app
