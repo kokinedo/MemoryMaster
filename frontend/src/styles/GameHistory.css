@@ -1,61 +1,24 @@
 .game-history {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .history-list {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .history-item {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    padding: 15px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .history-item:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .history-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-  }
-  
-  .history-item-details {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #eee;
-  }
-  
-  .audit-trail {
-    font-size: 0.9em;
-    color: #666;
-  }
-  
-  .audit-trail-item {
-    margin-bottom: 5px;
-  }
-  
-  .no-history {
-    text-align: center;
-    color: #666;
-    font-style: italic;
-  }
-  
-  @media (max-width: 600px) {
-    .game-history {
-      padding: 10px;
-    }
-    
-    .history-item {
-      padding: 10px;
-    }
-  }
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.game-item {
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.game-summary {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.audit-trail {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}

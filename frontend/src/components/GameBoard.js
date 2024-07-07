@@ -13,10 +13,11 @@ const GameBoard = () => {
   const [matchedPairs, setMatchedPairs] = useState(0);
   const { gameMode, setGameMode } = useContext(GameContext);
   const location = useLocation();
-  const navigate = useNavigate();
   const [gameStarted, setGameStarted] = useState(false);
   const [showWinPopup, setShowWinPopup] = useState(false);
   const [removingCards, setRemovingCards] = useState([]);
+  const [gameHistory, setGameHistory] = useState([]);
+  
 
 
   useEffect(() => {
@@ -65,24 +66,36 @@ const GameBoard = () => {
     return shuffled;
   };
 
+  const saveGame = async () => {
+    try {
+      await axios.post('http://localhost:5000/api/game', {
+        difficulty: gameMode,
+        moves: moves,
+        player_id: 'player1',
+        moves: gameHistory
+      });
+    } catch (error) {
+      console.error('Error saving game:', error);
+    }
+  };
+
   const handleCardClick = (card) => {
     if (flippedCards.length === getRequiredMatches() || card.matched) return;
     
     const newFlippedCards = [...flippedCards, card];
     setFlippedCards(newFlippedCards);
 
+    
+    setGameHistory(prevHistory => [...prevHistory, {
+      card_name: card.name || 'Unknown', 
+      coordinates: `[${card.x || 0}, ${card.y || 0}]`,
+      found_match: false,
+      move_number: prevHistory.length + 1
+    }]);
+
     if (newFlippedCards.length === getRequiredMatches()) {
       setMoves(moves + 1);
       checkForMatch(newFlippedCards);
-    }
-  };
-
-  const getRequiredMatches = () => {
-    switch (gameMode) {
-      case 'easy': return 2;
-      case 'medium': return 3;
-      case 'hard': return 4;
-      default: return 2;
     }
   };
 
@@ -94,6 +107,14 @@ const GameBoard = () => {
         setCards(prevCards => prevCards.filter(card => !flippedCards.some(flipped => flipped.id === card.id)));
         setRemovingCards([]);
       }, 500); // This should match the duration of the CSS transition
+
+      // Update game history to mark these moves as matches
+      setGameHistory(prevHistory => {
+        const lastMoves = prevHistory.slice(-getRequiredMatches());
+        const updatedLastMoves = lastMoves.map(move => ({...move, found_match: true}));
+        return [...prevHistory.slice(0, -getRequiredMatches()), ...updatedLastMoves];
+      });
+
       setMatchedPairs(matchedPairs + 1);
       setFlippedCards([]);
     } else {
@@ -104,6 +125,7 @@ const GameBoard = () => {
   useEffect(() => {
     if (gameStarted && cards.length === 0) {
       setShowWinPopup(true);
+      saveGame();
     }
   }, [cards.length, gameStarted]);
 
@@ -112,6 +134,15 @@ const GameBoard = () => {
     initializeGame(gameMode);
     setMoves(0);
     setMatchedPairs(0);
+  };
+
+  const getRequiredMatches = () => {
+    switch (gameMode) {
+      case 'easy': return 2;
+      case 'medium': return 3;
+      case 'hard': return 4;
+      default: return 2;
+    }
   };
 
   if (!gameStarted) {
