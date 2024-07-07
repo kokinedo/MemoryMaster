@@ -26,6 +26,9 @@ node_modules/
 
 # Database
 *.sqlite3
+*.db
+backend/app/app.db
+backend/instance/
 
 # Environment variables
 .env
@@ -68,3 +71,12 @@ Thumbs.db
 # NPM
 /node_modules/
 /.package-lock.json
+
+# Flask migrations
+migrations/versions/
+
+# Python virtual environment
+backend/venv/
+
+# Debugging scripts
+backend/check_db.py
