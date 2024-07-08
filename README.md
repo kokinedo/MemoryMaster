@@ -68,7 +68,7 @@ Check out a video demo of the app [here](https://drive.google.com/file/d/123iMFl
     pip install -r requirements.txt
     ```
 4. Set up the database:
-    - Create a PostgreSQL database named `memory_master`
+    - Create a PostgreSQL database named `memorymaster`
     - Update the `SQLALCHEMY_DATABASE_URI` in `config.py` with your database credentials
 5. Initialize the database:
     ```python
@@ -86,7 +86,7 @@ Check out a video demo of the app [here](https://drive.google.com/file/d/123iMFl
 1. Install PostgreSQL on your machine. Refer to the [official PostgreSQL documentation](https://www.postgresql.org/docs/) for installation instructions.
 2. Create a new PostgreSQL database named `memorymaster`:
     ```sql
-    CREATE DATABASE memory_master;
+    CREATE DATABASE memorymaster;
     ```
 3. Update the `SQLALCHEMY_DATABASE_URI` in `backend/config.py` with your PostgreSQL database credentials:
     ```python
