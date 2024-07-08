@@ -33,17 +33,17 @@ const GameBoard = () => {
       const response = await axios.get(`https://randomuser.me/api/?results=${cardCount}`);
       const users = response.data.results;
       
-      const gameCards = users.flatMap(user => {
+      const gameCards = users.flatMap((user, index) => {
         const cards = [
-          { id: `${user.login.uuid}-1`, image: user.picture.large, matched: false },
-          { id: `${user.login.uuid}-2`, image: user.picture.large, matched: false },
+          { id: `${user.login.uuid}-1`, image: user.picture.large, matched: false, name: `${user.name.first} ${user.name.last}`, x: 0, y: index },
+          { id: `${user.login.uuid}-2`, image: user.picture.large, matched: false, name: `${user.name.first} ${user.name.last}`, x: 1, y: index },
         ];
         if (mode === 'medium') {
-          cards.push({ id: `${user.login.uuid}-3`, image: user.picture.large, matched: false });
+          cards.push({ id: `${user.login.uuid}-3`, image: user.picture.large, matched: false, name: `${user.name.first} ${user.name.last}`, x: 2, y: index });
         } else if (mode === 'hard') {
           cards.push(
-            { id: `${user.login.uuid}-3`, image: user.picture.large, matched: false },
-            { id: `${user.login.uuid}-4`, image: user.picture.large, matched: false }
+            { id: `${user.login.uuid}-3`, image: user.picture.large, matched: false, name: `${user.name.first} ${user.name.last}`, x: 2, y: index },
+            { id: `${user.login.uuid}-4`, image: user.picture.large, matched: false, name: `${user.name.first} ${user.name.last}`, x: 3, y: index }
           );
         }
         return cards;
@@ -84,15 +84,14 @@ const GameBoard = () => {
     
     const newFlippedCards = [...flippedCards, card];
     setFlippedCards(newFlippedCards);
-
-    
+  
     setGameHistory(prevHistory => [...prevHistory, {
-      card_name: card.name || 'Unknown', 
-      coordinates: `[${card.x || 0}, ${card.y || 0}]`,
+      card_name: card.name,
+      coordinates: `[${card.x}, ${card.y}]`,
       found_match: false,
       move_number: prevHistory.length + 1
     }]);
-
+  
     if (newFlippedCards.length === getRequiredMatches()) {
       setMoves(moves + 1);
       checkForMatch(newFlippedCards);

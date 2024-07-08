@@ -36,5 +36,10 @@ def get_history(player_id):
         'difficulty': game.difficulty,
         'total_moves': game.total_moves,
         'date_played': game.date_played.isoformat(),
-        'player_id': game.player_id
+        'moves': [{
+            'card_name': move.card_name,
+            'coordinates': move.coordinates,
+            'found_match': move.found_match,
+            'move_number': move.move_number
+        } for move in game.moves]
     } for game in games]), 200
